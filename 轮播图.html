@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .box {
+            width: 520px;
+            height: 280px;
+            margin: 50px auto;
+            position: relative;
+
+        }
+
+        .inner {
+            width: 520px;
+            height: 280px;
+            /* overflow-x: scroll; */
+            overflow: hidden;
+
+        }
+
+        .content {
+            width: 2600px;
+            height: 280px;
+        }
+
+        .content>img {
+            float: left;
+        }
+        
+        .list{
+            list-style: none;
+            position: absolute;
+            bottom: 10px;
+            left: 70px;
+
+        }
+
+        .list>li{
+            width: 30px;
+            height: 8px;
+            background-color: rgb(71, 70, 70);
+            float: left;
+            margin: 0 20px;
+        }
+
+        .list>.active{
+            background: white;
+        }
+
+
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="inner">
+            <div class="content">
+                <img src="./image/0.jpg" alt="">
+                <img src="./image/1.jpg" alt="">
+                <img src="./image/2.jpg" alt="">
+                <img src="./image/3.jpg" alt="">
+                <img src="./image/4.jpg" alt="">
+            </div>
+            <ul class="list">
+                <li class="active"></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>
+
+
+<script>
+
+    var timer = null;
+    var inner = document.getElementsByClassName('inner')[0];
+    var imgs = document.getElementsByTagName('img');
+
+    var lis = document.getElementsByTagName('li');
+
+    var timer2 = null;//步长定时器
+    function autoMove() {
+        var x = 0;//图片的下标
+        timer = setInterval(function () {
+            x++;
+
+            if (x >= imgs.length) {
+                x = 0;
+            }
+
+            //  2、动起来
+            var step = 0;
+            var maxStep = 20;
+            var start = inner.scrollLeft;
+            var end = imgs[0].offsetWidth * x;
+            var everyStep = (end - start) / maxStep;//每一步走多少
+
+            timer2 = setInterval(function () {
+                step++;
+
+                if (step >= maxStep) {
+                    step = 0;
+                    clearInterval(timer2);
+                }
+                start += everyStep;
+                //inner scrolleft 
+                inner.scrollLeft = start;
+            }, 70)
+
+            // 改变分页器的颜色
+            // 遍历 全部类名为空   然后根据图片的下标 添加类名
+            for(var i=0;i<lis.length;i++){
+                lis[i].className = '';
+            }
+
+            lis[x].className = 'active';
+
+            lis[x].onclick = function(){
+                clearInterval(timer);
+            }
+            lis[x].ondblclick = function(){
+                autoMove();
+            }
+            
+        }, 2000);
+    }
+
+    autoMove();
+</script>
